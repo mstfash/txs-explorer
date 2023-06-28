@@ -31,4 +31,4 @@ This project took me 3-4 hours as follows
 
 ## Deployed on
 
-This project is deployed on Vercel on this [link](https://riddlex.vercel.app/) and the database is postgresql and deployed on [Superbase](https://supabase.com/)
+This project is deployed on Vercel on this [link](https://txs-explorer.vercel.app/)

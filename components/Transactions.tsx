@@ -75,17 +75,19 @@ const Transactions = ({
   };
   return (
     <div>
-      <Select onValueChange={handleChange} value={chain}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Chain" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value={CHAINS.ETHEREUM}>{CHAINS.ETHEREUM}</SelectItem>
-            <SelectItem value={CHAINS.POLYGON}>{CHAINS.POLYGON}</SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div className="m-3">
+        <Select onValueChange={handleChange} value={chain}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Chain" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value={CHAINS.ETHEREUM}>{CHAINS.ETHEREUM}</SelectItem>
+              <SelectItem value={CHAINS.POLYGON}>{CHAINS.POLYGON}</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
       {txs?.find((txRe) => txRe.chain === chain)?.txs?.result?.length ? (
         <Table className="mt-5">
           <TableCaption>A list of address transactions.</TableCaption>
