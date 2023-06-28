@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/Table';
 import { CHAINS } from '@/lib/constants';
 import { Transaction } from '@/lib/types';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { formatNumber, getExternalLink, truncateAddress } from '@/lib/utils';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -36,6 +36,7 @@ const Transactions = ({
     | {
         chain: CHAINS;
         txs: any;
+        balance: string;
       }[]
     | null
     | undefined;
@@ -73,9 +74,14 @@ const Transactions = ({
     setSortBy(type);
     setSortFilter(sortFilter === 'desc' ? 'asc' : 'desc');
   };
+
+  const currency = useMemo(() => {
+    return chain === CHAINS.ETHEREUM ? 'ETH' : 'MATIC';
+  }, [chain]);
+
   return (
     <div>
-      <div className="m-3">
+      <div className="m-3 flex align-center justify-between">
         <Select onValueChange={handleChange} value={chain}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Chain" />
@@ -87,6 +93,17 @@ const Transactions = ({
             </SelectGroup>
           </SelectContent>
         </Select>
+
+        <div className="border rounded-lg p-2 text-sm">
+          <span>Current Balance:</span>{' '}
+          <span className="font-bold">
+            {' '}
+            {formatNumber(
+              txs?.find((txRe) => txRe.chain === chain)?.balance as string
+            )}{' '}
+            {currency}
+          </span>
+        </div>
       </div>
       {txs?.find((txRe) => txRe.chain === chain)?.txs?.result?.length ? (
         <Table className="mt-5">
@@ -193,8 +210,7 @@ const Transactions = ({
                   <TableCell>
                     {tx.value ? (
                       <>
-                        {ethers.formatEther(tx.value)}{' '}
-                        {chain === CHAINS.ETHEREUM ? 'ETH' : 'MATIC'}{' '}
+                        {ethers.formatEther(tx.value)} {currency}
                       </>
                     ) : (
                       ''

@@ -2,7 +2,7 @@
 import { CHAINS } from '@/lib/constants';
 import { formatNumber, getExternalLink } from '@/lib/utils';
 import { TransactionResponse, ethers } from 'ethers';
-import { notFound } from 'next/navigation';
+import { useMemo } from 'react';
 
 const TransactionHash = ({
   txResp,
@@ -33,6 +33,10 @@ const TransactionHash = ({
   };
   const fees = Number(tx?.txData?.gasLimit) * Number(tx?.txData?.gasPrice);
   const txnFee = ethers.formatEther(String(fees));
+
+  const currency = useMemo(() => {
+    return tx?.chain === CHAINS.ETHEREUM ? 'ETH' : 'MATIC';
+  }, [tx]);
   return (
     <div>
       <div className="flex lg:flex-row flex-col">
@@ -120,8 +124,7 @@ const TransactionHash = ({
         <span className="text-break">
           {tx?.txData?.value ? (
             <>
-              {ethers.formatEther(tx?.txData?.value)}{' '}
-              {tx.chain === CHAINS.ETHEREUM ? 'ETH' : 'MATIC'}{' '}
+              {ethers.formatEther(tx?.txData?.value)} {currency}{' '}
             </>
           ) : (
             ''
@@ -131,15 +134,14 @@ const TransactionHash = ({
       <div className="flex lg:flex-row flex-col mt-5">
         <span className="lg:min-w-[200px]">Transaction Fee:</span>
         <span className="text-break">
-          {formatNumber(txnFee, 8)}{' '}
-          {tx?.chain === CHAINS.ETHEREUM ? 'ETH' : 'MATIC'}
+          {formatNumber(txnFee, 8)} {currency}
         </span>
       </div>
       <div className="flex lg:flex-row flex-col mt-5">
         <span className="lg:min-w-[200px]">Gas Price:</span>
         <span className="text-break">
           {formatNumber(ethers.formatEther(tx?.txData?.gasPrice as bigint), 8)}{' '}
-          {tx?.chain === CHAINS.ETHEREUM ? 'ETH' : 'MATIC'}
+          {currency}
         </span>
       </div>
     </div>

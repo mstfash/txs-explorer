@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import {
   CHAINS,
   ETHERSCAN_API_KEY,
@@ -30,10 +31,15 @@ export async function getTxHistory(
   try {
     return Promise.all(
       explorers.map(async (exp) => {
+        const provider =
+          exp.chain === CHAINS.ETHEREUM ? ethersProvider : polygonProvider;
         const fetchUrl = `${exp.url}/api?module=account&action=txlist&address=${address}&page=${page}&offset=${offset}&sort=desc&apikey=${exp.apiKey}`;
         return {
           chain: exp.chain,
           txs: await (await fetch(fetchUrl)).json(),
+          balance: ethers.formatEther(
+            (await provider.getBalance(address)).toString()
+          ),
         };
       })
     );
